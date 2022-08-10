@@ -94,4 +94,76 @@ class Employee extends REST_Controller{
       }
 
 
+                 ///////////////////
+
+
+  public function index_put()
+  {
+    //updating data method
+   
+    $data = json_decode(file_get_contents("php://input"));
+
+    if(isset($data->id) && isset($data->emp_name) && isset($data->emp_email) && isset($data->emp_password) && isset($data->emp_add) && isset($data->emp_mobile) && isset($data->emp_gender) && isset($data->emp_dob) && isset($data->emp_pancard) && isset($data->emp_joining) && isset($data->emp_salary) ){
+
+      $employee_id = $data->id;
+      $employee_info = array(
+        "emp_name" => $data->emp_name,
+        "emp_email" => $data->emp_email,
+        "emp_password" => $data->emp_password,
+        "emp_add" => $data->emp_add,
+        "emp_mobile" => $data->emp_mobile,
+        "emp_gender" => $data->emp_gender,
+        "emp_dob" => $data->emp_dob,
+        "emp_pancard" => $data->emp_pancard,
+        "emp_joining" => $data->emp_joining,
+        "emp_salary" => $data->emp_salary,
+      );
+
+      if($this->emp_model->update_employee_information($employee_id, $employee_info)){
+
+          $this->response(array(
+            "status" => 1,
+            "message" => "Employee data updated successfully"
+          ), REST_Controller::HTTP_OK);
+      }else{
+
+        $this->response(array(
+          "status" => 0,
+          "messsage" => "Failed to update student data"
+        ), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+      }
+    }else{
+
+      $this->response(array(
+        "status" => 0,
+        "message" => "All fields are needed"
+      ), REST_Controller::HTTP_NOT_FOUND);
+    }
+
+    
+  }
+
+
+  public function index_get()
+  {
+    $employee = $this->Emp_model->get_employee();
+
+    if(count($employee)>0){
+
+      $this->response(array(
+        "status" => 1,
+        "message" => "Employee found",
+        "data" => $employee
+      ), REST_Controller::HTTP_OK);
+    }else{
+
+      $this->response(array(
+        "status" => 0,
+        "message" => "No Employee found",
+        "data" => $employee
+      ), REST_Controller::HTTP_NOT_FOUND);
+    }
+  }
+
+
 }
