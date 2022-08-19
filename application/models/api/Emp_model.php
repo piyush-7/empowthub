@@ -38,4 +38,16 @@ class Emp_model extends CI_Model{
      return $query->result();
  }
 
+
+ public function leave_insert($data=array())
+ {
+     return  $this->db->insert("tbl_leave",$data);
+ }
+
+
+ public function department_insert($data=array())
+ {
+     return  $this->db->insert("tbl_department",$data);
+ }
+
 }
