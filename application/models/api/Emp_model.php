@@ -50,4 +50,9 @@ class Emp_model extends CI_Model{
      return  $this->db->insert("tbl_department",$data);
  }
 
+ public function designation_insert($data=array())
+ {
+     return  $this->db->insert("tbl_designaion",$data);
+ }
+
 }
