@@ -25,7 +25,7 @@ class Designation extends REST_Controller
 
         $this->response(array(
           "status" => 0,
-          "message" => "Department Name fields are needed"
+          "message" => "Designation Name fields are needed"
         ) , REST_Controller::HTTP_NOT_FOUND);
   
         }

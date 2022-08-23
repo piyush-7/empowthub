@@ -55,4 +55,17 @@ class Emp_model extends CI_Model{
      return  $this->db->insert("tbl_designaion",$data);
  }
 
+
+ public function get_manager()
+ {
+    $this->db->select('e.emp_name as Name,IFNULL(m.emp_name,"No Manager") as Manager');
+    
+    $this->db->from('tbl_employee as e');
+    $this->db->join('tbl_employee as m', 'e.manager_id = m.emp_id','left');
+    $query=$this->db->get();
+
+    return $query->result();
+
+ }
+
 }
