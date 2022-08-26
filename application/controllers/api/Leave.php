@@ -60,6 +60,18 @@
             ) , REST_Controller::HTTP_NOT_FOUND);
       
             }
+            if($this->form_validation->run( $this->form_validation->set_rules("emp_id", "Emp_id", "required|is_unique[tbl_leave.emp_id]")) === FALSE)
+            {
+
+          //   // we have some errors
+            $this->response(array(
+              "status" => 0,
+              "message" => "Leave Request Already Created"
+            ) , REST_Controller::HTTP_NOT_FOUND);
+      
+            }
+
+
 
 
             else
@@ -106,6 +118,57 @@
         }
 
 
+
+          public function index_get()
+        {
+          $leave = $this->Emp_model->leave_fetch();
+
+          if(count($leave)>0){
+
+            $this->response(array(
+              "status" => 1,
+              "message" => "All Leave found",
+              "data" => $leave
+            ), REST_Controller::HTTP_OK);
+          }else{
+
+            $this->response(array(
+              "status" => 0,
+              "message" => "No Leave found",
+              "data" => $leave
+            ), REST_Controller::HTTP_NOT_FOUND);
+          }
+        }
+
+
+        public function index_delete()
+        {
+          $data = json_decode(file_get_contents("php://input"));
+
+          $leave_id = $this->security->xss_clean($data->leave_id);  
+          
+          if($this->Emp_model->emp_delete($leave_id)){
+    
+            $this->response(array(
+              "status" => 1,
+              "messsage" => "Employee has been deleted"
+            ), REST_Controller::HTTP_OK);
+    
+    
+          }
+          else{
+    
+            $this->response(array(
+              "status" => 0,
+              "messsage" => "Failed to deleted"
+            ), REST_Controller::HTTP_NOT_FOUND);
+    
+    
+          }
+        }
+
+
+       
 
 
 

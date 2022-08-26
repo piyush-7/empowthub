@@ -48,7 +48,8 @@ class Student extends REST_Controller{
         "status" => 0,
         "message" => "All fields are needed"
       ) , REST_Controller::HTTP_NOT_FOUND);
-    }else{
+    }
+    else{
 
       if(!empty($name) && !empty($email) && !empty($mobile) && !empty($course)){
         // all values are available
@@ -98,7 +99,7 @@ class Student extends REST_Controller{
   public function index_put()
   {
     //updating data method
-    echo "This is PUT Method";
+    
     $data = json_decode(file_get_contents("php://input"));
 
     if(isset($data->id) && isset($data->name) && isset($data->email) && isset($data->mobile) && isset($data->course)){

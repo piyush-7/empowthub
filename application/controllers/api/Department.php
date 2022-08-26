@@ -20,7 +20,7 @@ class Department extends REST_Controller
 
 
         
-        if($this->form_validation->run( $this->form_validation->set_rules("depart_name", "Department Name", "required")) === FALSE)
+        if($this->form_validation->run( $this->form_validation->set_rules("depart_name", "Department Name", "required|is_unique[tbl_department.depart_name]")) === FALSE)
         {
 
         $this->response(array(

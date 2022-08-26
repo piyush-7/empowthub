@@ -3,7 +3,7 @@
 require APPPATH.'libraries/REST_Controller.php';
 
 
-class Designation extends REST_Controller
+class Emp_desi_map extends REST_Controller
 {
     public function __construct()
     {
@@ -13,34 +13,43 @@ class Designation extends REST_Controller
         $this->load->helper("security");
     }
 
-
     public function index_post()
     {
         $desi_name = $this->security->xss_clean($this->input->post("desi_name"));
+        $emp_id = $this->security->xss_clean($this->input->post("emp_id"));
 
 
-        
-        if($this->form_validation->run( $this->form_validation->set_rules("desi_name", "Designation Name", "required|is_unique[tbl_designaion.desi_name]")) === FALSE)
+        if($this->form_validation->run( $this->form_validation->set_rules("desi_name", "Designation Name", "required")) === FALSE)
         {
 
         $this->response(array(
           "status" => 0,
-          "message" => "Designation Name Already Exist"
+          "message" => "Designation Name fields are needed"
         ) , REST_Controller::HTTP_NOT_FOUND);
   
         }
 
+
+        elseif($this->form_validation->run($this->form_validation->set_rules("emp_id", "Emp_id", "required")) === FALSE)
+        {
+          $this->response(array(
+            "status" => 0,
+            "message" => "Emp_id fields are needed & Not Dublicate"
+          ) , REST_Controller::HTTP_NOT_FOUND);
+
+        }
+
         else
         {
-            if(!empty($desi_name))
+            if(!empty($desi_name) && !empty($emp_id) )
             {
-                $designation = array("desi_name"=>$desi_name);
+                $desi = array("desi_name"=>$desi_name,"emp_id"=>$emp_id);
 
-                if($this->Emp_model->designation_insert($designation))
+                if($this->Emp_model->emp_desi_map($desi))
                 {
                     $this->response(array(
                         "status" => 1,
-                        "message" => "Designation has been created"
+                        "message" => "Emp-Desi has been map"
                       ), REST_Controller::HTTP_OK);
                 }
 
@@ -48,7 +57,7 @@ class Designation extends REST_Controller
                 {
                     $this->response(array(
                         "status" => 0,
-                        "message" => "Failed to create Designation"
+                        "message" => "Failed to map Emp-Desi"
                       ), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
@@ -63,6 +72,7 @@ class Designation extends REST_Controller
 
             
         }
+
     }
 
 }
