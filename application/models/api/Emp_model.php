@@ -31,15 +31,6 @@ class Emp_model extends CI_Model{
   }
 
 
-  
-  public function update_employee_information($emp_id, $informations)
-{
-
-    $this->db->where("emp_id", $emp_id);
-    return $this->db->update("tbl_employee", $informations);
-}
-
-
  public function get_employee()
 
  {
@@ -145,33 +136,51 @@ class Emp_model extends CI_Model{
 
                 return $query->result();
         }
+
+        public function update_employee_information($emp_id, $data) //working with not validation
+        {
+        
+            $this->db->where("emp_id", $emp_id);
+            return $this->db->update("tbl_employee", $data);
+        }
+
         public function update_item($emp_id,$data=array()) //Normal Method
         {
             $data=array(
-            'emp_name' => $this->input->post('emp_name'),
-            'emp_email'=> $this->input->post('emp_email'),
-            'emp_password' => $this->input->post('emp_password'),
-            'emp_add' => $this->input->post('emp_add'),
-            'emp_mobile' => $this->input->post('emp_mobile'),
-            'emp_gender' => $this->input->post('emp_gender'),
-            'emp_dob' => $this->input->post('emp_dob'),
-            'emp_pancard' => $this->input->post('emp_pancard'),
-            'emp_joining' => $this->input->post('emp_joining'),
-            'emp_salary' => $this->input->post('emp_salary'),
-            'depart_id' => $this->input->post('depart_id'),
-            'desi_id' => $this->input->post('desi_id'),
+            'emp_name' => $this->input->put('emp_name'),
+            'emp_email'=> $this->input->put('emp_email'),
+            'emp_password' => $this->input->put('emp_password'),
+            'emp_add' => $this->input->put('emp_add'),
+            'emp_mobile' => $this->input->put('emp_mobile'),
+            'emp_gender' => $this->input->put('emp_gender'),
+            'emp_dob' => $this->input->put('emp_dob'),
+            'emp_pancard' => $this->input->put('emp_pancard'),
+            'emp_joining' => $this->input->put('emp_joining'),
+            'emp_salary' => $this->input->put('emp_salary'),
+            'depart_id' => $this->input->put('depart_id'),
+            'desi_id' => $this->input->put('desi_id'),
                 );
                 if($emp_id==0){
                     return $this->db->insert('tbl_employee',$data);
                 }
                 else
                 {
-                    $this->p->where('emp_id',$emp_id);
+                    $this->db->where('emp_id',$emp_id);
                     return $this->db->update('tbl_employee',$data);
                 }        
                             
                     $this->db->where('emp_id',$emp_id);
                     $this->db->update('tbl_employee');
+        }
+
+        public function emp_update($emp_id,$data) //update third method
+        {
+            
+            $this->db->where('emp_id', $emp_id);
+            
+           return $this->db->update('tbl_employee', $data);
+            
+            
         }
 
         public function leave_status()
@@ -208,7 +217,7 @@ class Emp_model extends CI_Model{
          return  $this->db->insert("tbl_designaion",$data);
         }
 
-        public function leave_accepted_get()
+        public function leave_pending_get()
         {
             $this->db->select('tbl_employee.emp_id as Employee ID,tbl_employee.emp_name as Employee Name,tbl_leave.leave_id as Leave ID,tbl_leave.leave_status as Leave Status');
 
@@ -216,9 +225,36 @@ class Emp_model extends CI_Model{
 
             $this->db->join('tbl_leave', 'tbl_employee.emp_id = tbl_leave.emp_id');
             $this->db->where('tbl_leave.leave_status=','pending');
+            $this->db->or_where('tbl_leave.leave_status=','rejected');
 
             $query=$this->db->get();
 
             return $query->result();
         }
+
+
+        public function leave_accepted_get()
+        {
+            $this->db->select('tbl_employee.emp_id as Employee ID,tbl_employee.emp_name as Employee Name,tbl_leave.leave_id as Leave ID,tbl_leave.leave_status as Leave Status');
+
+            $this->db->from('tbl_employee');
+
+            $this->db->join('tbl_leave', 'tbl_employee.emp_id = tbl_leave.emp_id');
+            $this->db->where('tbl_leave.leave_status=','Accepted');
+            $this->db->or_where('tbl_leave.leave_status=','accepted');
+
+            $query=$this->db->get();
+
+            return $query->result();
+        }
+
+        public function edit_emp($emp_id)
+        {
+           $this->db->where('emp_id', $emp_id);
+
+           $q= $this->db->get('tbl_employee');
+           return $q->row();
+
+        }
+
 }

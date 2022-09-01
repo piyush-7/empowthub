@@ -2,7 +2,7 @@
 
 require APPPATH.'libraries/REST_Controller.php';
 
-class Leave_pending  extends REST_Controller
+class Leave_accept  extends REST_Controller
 {
     public function __construct()
     {
@@ -15,20 +15,20 @@ class Leave_pending  extends REST_Controller
 
     public function index_get()
     {
-        $emp_leave_status = $this->Emp_model->leave_pending_get();
+        $emp_leave_status = $this->Emp_model->leave_accepted_get();
   
         if(count($emp_leave_status)>0){
   
         $this->response(array(
           "status" => 1,
-          "message" => "Pending Leave status found",
+          "message" => "Accepted Leave status found",
           "data" => $emp_leave_status
         ), REST_Controller::HTTP_OK);
         }else{
   
         $this->response(array(
           "status" => 0,
-          "message" => "No Pending-Leave status found",
+          "message" => "No Accepted-Leave status found",
           "data" => $emp_leave_status
         ), REST_Controller::HTTP_NOT_FOUND);
       }

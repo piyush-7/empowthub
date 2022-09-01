@@ -15,7 +15,7 @@ class Employee extends REST_Controller{
     // $this->emp = $this->load->database('tbl_emp',TRUE);
     $this->load->model(array("api/Emp_model"));
     $this->load->library(array("form_validation"));
-    $this->load->helper("security");
+    $this->load->helper(array('security','form','url'));
   }
 
 
@@ -57,7 +57,7 @@ class Employee extends REST_Controller{
           //   // we have some errors
             $this->response(array(
               "status" => 0,
-              "message" => "Name fields are needed"
+              "message" => "Name must be min 4 character"
             ) , REST_Controller::HTTP_NOT_FOUND);
       
         }
@@ -220,12 +220,6 @@ class Employee extends REST_Controller{
       }
 
 
-
-                
-
-
-  
-
   public function index_get()
   {
     $employee = $this->Emp_model->get_employee();
@@ -279,8 +273,22 @@ class Employee extends REST_Controller{
 
   // public function index_put($data) //Normal method
   // {
+
+    
+  //   // $emp_name = $this->security->xss_clean($this->input->post("emp_name"));
+  //   // $emp_email = $this->security->xss_clean($this->input->post("emp_email"));
+  //   // $emp_password = $this->security->xss_clean($this->input->post("emp_password"));
+  //   // $emp_add = $this->security->xss_clean($this->input->post("emp_add"));
+  //   // $emp_mobile = $this->security->xss_clean($this->input->post("emp_mobile"));
+  //   // $emp_gender = $this->security->xss_clean($this->input->post("emp_gender"));
+  //   // $emp_dob = $this->security->xss_clean($this->input->post("emp_dob"));
+  //   // $emp_pancard = $this->security->xss_clean($this->input->post("emp_pancard"));
+  //   // $emp_joining = $this->security->xss_clean($this->input->post("emp_joining"));
+  //   // $emp_salary = $this->security->xss_clean($this->input->post("emp_salary"));
+  //   // $depart_id = $this->security->xss_clean($this->input->post("depart_id"));
+  //   // $desi_id = $this->security->xss_clean($this->input->post("desi_id"));
      
-  //   if($this->form_validation->run( $this->form_validation->set_rules("emp_name", "Name", "required|min_length[4]|alpha")) === FALSE)
+  //   if($this->form_validation->run( $this->form_validation->set_rules("emp_name", "Name", "required")) === FALSE)
   //      {
 
   //         //   // we have some errors
@@ -414,7 +422,7 @@ class Employee extends REST_Controller{
   // }
 
 
-  public function index_put()
+  public function index_put() //working with non validation
   {
     $data = json_decode(file_get_contents("php://input"));
 
@@ -459,7 +467,91 @@ class Employee extends REST_Controller{
   }
 
   
+    // public function index_put($emp_id) //update third method
+    // {
+    //   $emp = new Emp_model;
+    //   $data =array(
+    //     'emp_name' => $this->put->post('emp_name'),
+    //     'emp_email'=> $this->put->post('emp_email'),
+    //     'emp_password' => $this->put->post('emp_password'),
+    //     'emp_add' => $this->put->post('emp_add'),
+    //     'emp_mobile' => $this->put->post('emp_mobile'),
+    //     'emp_gender' => $this->put->post('emp_gender'),
+    //     'emp_dob' => $this->put->post('emp_dob'),
+    //     'emp_pancard' => $this->put->post('emp_pancard'),
+    //     'emp_joining' => $this->put->post('emp_joining'),
+    //     'emp_salary' => $this->put->post('emp_salary'),
+    //     'depart_id' => $this->put->post('depart_id'),
+    //     'desi_id' => $this->put->post('desi_id'));
+
+    //     $reuslt = $emp->emp_update($emp_id,$data);
+
+    //     if($reuslt > 0)
+    //     {
+    //       $this->response(array(
+    //         "status" => 1,
+    //         "message" => "Employee has been UPDATED"
+    //       ), REST_Controller::HTTP_OK);
+    //     }
+
+    //     else{
+    //       $this->response(array(
+    //         "status" => 0,
+    //         "message" => "Employee has been NOT UPDATED"
+    //       ), REST_Controller::HTTP_NOT_FOUND);
+
+    //     }
+        
+
+    // }
 
 
 
+    public function emp_post()
+    {
+      
+      
+      $emp_name = $this->security->xss_clean($this->input->post("emp_name"));
+      $emp_email = $this->security->xss_clean($this->input->post("emp_email"));
+      $emp_password = $this->security->xss_clean($this->input->post("emp_password"));
+      $emp_add = $this->security->xss_clean($this->input->post("emp_add"));
+      $emp_mobile = $this->security->xss_clean($this->input->post("emp_mobile"));
+      $emp_gender = $this->security->xss_clean($this->input->post("emp_gender"));
+      $emp_dob = $this->security->xss_clean($this->input->post("emp_dob"));
+      $emp_pancard = $this->security->xss_clean($this->input->post("emp_pancard"));
+      $emp_joining = $this->security->xss_clean($this->input->post("emp_joining"));
+      $emp_salary = $this->security->xss_clean($this->input->post("emp_salary"));
+      $depart_id = $this->security->xss_clean($this->input->post("depart_id"));
+      $desi_id = $this->security->xss_clean($this->input->post("desi_id"));
+      $manager_id = $this->security->xss_clean($this->input->post("manager_id"));
+
+       //form validation
+       $this->form_validation->set_rules("emp_name", "Name", "required|min_length[4]|alpha");
+       $this->form_validation->set_rules("emp_email", "Email", "required|valid_email|valid_emails|is_unique[tbl_employee.emp_email],array('required' => 'Name must be min 4 character')");
+       $this->form_validation->set_rules("emp_password", "Password", "required");
+       $this->form_validation->set_rules("emp_add", "Address", "required");
+       $this->form_validation->set_rules("emp_mobile", "Mobile", "required|exact_length[10],array('required' => 'Mobile Number Should be 10 digit')|numeric");
+       $this->form_validation->set_rules("emp_gender", "Gender", "required");
+       $this->form_validation->set_rules("emp_dob", "emp_dob", "required");
+       $this->form_validation->set_rules("emp_pancard", "Pancard", "required|exact_length[10],array('required' => 'anCard fields are needed & Should be Combination of 10 Char & Digit')");
+       $this->form_validation->set_rules("emp_joining", "Date", "required");
+       $this->form_validation->set_rules("emp_salary", "Salary", "required");
+       $this->form_validation->set_rules("desi_id", "Desi_id", "required");
+       $this->form_validation->set_rules("depart_id", "Depart_id", "required");
+       $this->form_validation->set_rules("manager_id", "Manager_id", "required");
+
+        
+       if ($this->form_validation->run() == FALSE) 
+       {
+        
+       }
+    }
+
+    public function emp_find_get($emp_id)
+    {
+      $emp = new emp_model;
+      $result = $emp->edit_emp($emp_id);
+
+      $this->response($result,200);
+    }
 }

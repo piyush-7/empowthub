@@ -55,4 +55,5 @@ $route['translate_uri_dashes'] = FALSE;
 
 
 
-$route["register"] = "Employee/emp_post";
+$route["api/Employee/(:any)"] = "api/Employee/emp_find/$1";
+
